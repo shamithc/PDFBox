@@ -42,11 +42,12 @@ public class PDFGenerator {
       PDType1Font font = PDType1Font.TIMES_ROMAN;
       PDType1Font fontBold = PDType1Font.TIMES_BOLD;
 
+
       try (PDPageContentStream cont = new PDPageContentStream(doc, myPage)) {
 
         float scale = 1f;
         PDImageXObject pdImage = PDImageXObject.createFromFile(
-            "src/main/resources/static/Validus.png", doc);
+            "src/main/resources/static/validus-new.png", doc);
         scale = width / pdImage.getWidth();
         yOffset -= 40;
         cont.drawImage(pdImage, startX, startY, 200, 40);
@@ -96,12 +97,14 @@ public class PDFGenerator {
       ///////////////////////2nd Page/////////////////
 
       try (PDPageContentStream cont = new PDPageContentStream(doc, myPage1)) {
+          yOffset = startY;
         float scale = 1f;
+
         PDImageXObject pdImage = PDImageXObject.createFromFile(
-            "src/main/resources/static/Validus.png", doc);
+            "src/main/resources/static/validus-new.png", doc);
         scale = width / pdImage.getWidth();
         //              yOffset-=(pdImage.getHeight()*scale);
-        yOffset -= 40;
+        yOffset -= 2;
 
         cont.drawImage(pdImage, startX, startY, 200, 40);
         String text = "Important Information for Loan Repayments";
@@ -113,21 +116,37 @@ public class PDFGenerator {
         cont.newLineAtOffset(startX, yOffset);
         yOffset -= leading;
         cont.newLineAtOffset(0, -leading);
-        yOffset -= leading;
+//        yOffset -= leading;
 
         Paragraph paragraph = new Paragraph();
         paragraph.addParagraph(cont, width, 0, -12, text, true, font);
+        cont.endText();
 
-        text =
-            "Please note that for your convenience, Validus offers the following repayment options: Via 1) electronic funds transfer, or 2) cheque";
+
+
+//        drawLine(cont, text, 11, 0, -12, -2, 15.0f, font);
+
+
+        cont.beginText();
+//        yOffset -= 5;
+        cont.setFont(fontBold, 15.0f);
+        cont.newLineAtOffset(startX, yOffset);
+        yOffset -= leading;
+        cont.newLineAtOffset(0, -leading);
+        yOffset -= leading;
+
+
+
+//        PDPageContentStream contentStream, String str, float lineWidth, float sx, float sy, float linePosition, float fontSize, PDFont font)
+
+        text = "Please note that for your convenience, Validus offers the following repayment options: Via 1) electronic funds transfer, or 2) cheque";
         paragraph.addParagraph(cont, width, 0, -12, text, true, font);
 
-        text =
-            "1) To make loan repayments via electronic funds transfer,please transfer to:";
+        text = "1) To make loan repayments via electronic funds transfer,please transfer to:";
         paragraph.addParagraph(cont, width, 0, -12, text, true, font);
 
-        text = "Bank Name:DBS";
-        paragraph.addParagraph(cont, width, 0, -0, text, true, font);
+        text = "Bank Name: DBS";
+        paragraph.addParagraph(cont, width, 40, -12, text, true, font);
         text = "Account Name:Vistra Corporate Trust - Validus Capita";
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
         text =
@@ -138,10 +157,22 @@ public class PDFGenerator {
         text = "Branch Code:003";
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
 
+//        cont.endText();
+//
+//        cont.beginText();
+////        yOffset -= 5;
+//        cont.setFont(fontBold, 15.0f);
+//        cont.newLineAtOffset(startX, 613);
+//        yOffset -= leading;
+//        cont.newLineAtOffset(0, -leading);
+//        yOffset -= leading;
+
+
+
         text = "2) For loan repayments via cheque deposit,please:";
-        paragraph.addParagraph(cont, width, 0, -12, text, true, font);
+        paragraph.addParagraph(cont, width, -40, -12, text, true, font);
         text = "Make payable to:Vistra Corporate Trust - Validus Capital";
-        paragraph.addParagraph(cont, width, 0, -0, text, true, font);
+        paragraph.addParagraph(cont, width, 40, -12, text, true, font);
         text = "Payee’s Account Number:003 952 668";
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
         text =
@@ -149,12 +180,12 @@ public class PDFGenerator {
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
 
         text = "We, IMPEX MARINE (S) PTE LTD agree:";
-        paragraph.addParagraph(cont, width, 0, -12, text, true, font);
+        paragraph.addParagraph(cont, width, -40, -12, text, true, font);
 
         text =
             "1. to be irrevocably bound by the SMEs’ Terms and Conditions and the terms of the SMEs’ Working Capital Financing Facility Terms andConditions "
                 + "attached herein and understand that these will apply to this Facility";
-        paragraph.addParagraph(cont, width, 0, -12, text, true, font);
+        paragraph.addParagraph(cont, width, 10, -7, text, true, font);
         text =
             "2. that  the  Funded  Amount  will  not  be  disbursed  to  us  until  and  unless  we  duly  execute,  or  arrange  to  be  duly  executed,  and  deliver  to"
                 + "Validus  the  relevant  security  documents  or  guarantees  (including,  without  limitation,  those  set  out  above)  which  Validus  requires  us  to"
@@ -180,12 +211,12 @@ public class PDFGenerator {
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
 
         text = "We confirm:";
-        paragraph.addParagraph(cont, width, 0, -12, text, true, font);
+        paragraph.addParagraph(cont, width, -10, -12, text, true, font);
 
         text =
             "1. that the information set out in our Account profile and our previously submitted business profile and constitutional documents remain true,"
                 + "accurate and correct";
-        paragraph.addParagraph(cont, width, 0, -0, text, true, font);
+        paragraph.addParagraph(cont, width, 10, -0, text, true, font);
         text =
             "2. the  accuracy,  authenticity  and  completeness  of  all  the  documents  and  information  submitted  with  our  corresponding  Facility  Application"
                 + "and such document and information is most current and up-to-date";
@@ -216,7 +247,7 @@ public class PDFGenerator {
       try (PDPageContentStream cont = new PDPageContentStream(doc, myPage2)) {
         float scale = 1f;
         PDImageXObject pdImage = PDImageXObject.createFromFile(
-            "src/main/resources/static/Validus.png", doc);
+            "src/main/resources/static/validus-new.png", doc);
         scale = width / pdImage.getWidth();
         //              yOffset-=(pdImage.getHeight()*scale);
         yOffset -= 40;
@@ -294,6 +325,20 @@ public class PDFGenerator {
     }
   }
 
+
+
+  public void drawLine(PDPageContentStream contentStream, String str, float lineWidth, float sx, float sy, float linePosition, float fontSize, PDFont font) throws IOException {
+    //Calculate String width
+    float stringWidth =  font.getStringWidth(str) / 1000 * fontSize;
+    float lineEndPoint = sx + stringWidth;
+
+    //begin to draw our line
+    contentStream.setLineWidth(lineWidth);
+    contentStream.moveTo(sx, sy + linePosition);
+    contentStream.lineTo(lineEndPoint, sy + linePosition);
+    contentStream.stroke();
+  }
+
     private void drawPageThreeTable(PDDocument doc, PDPage myPage2)
         throws IOException {
 
@@ -325,8 +370,7 @@ public class PDFGenerator {
         cell = row.createCell(50, "<b>UEN</b>: 1900089G ");
     }
 
-    private void drawPageOneTable(PDDocument doc, PDPage myPage)
-      throws IOException {
+    private void drawPageOneTable(PDDocument doc, PDPage myPage) throws IOException {
 
     float margin = 75;
     //Dummy Table
