@@ -1,5 +1,8 @@
 package com.example.demo.pdfbox;
 
+import be.quodlibet.boxable.BaseTable;
+import be.quodlibet.boxable.Cell;
+import be.quodlibet.boxable.Row;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -10,7 +13,9 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PDFGenerator {
 
@@ -30,6 +35,11 @@ public class PDFGenerator {
             float yOffset = startY;
             PDType1Font font = PDType1Font.TIMES_ROMAN;
             PDType1Font fontBold = PDType1Font.TIMES_BOLD;
+
+
+
+
+
 
 
             try (PDPageContentStream cont = new PDPageContentStream(doc, myPage)) {
@@ -79,6 +89,8 @@ public class PDFGenerator {
                         "our Account.";
 
                 paragraph.addParagraph(cont, width, 0, -12, text, true, font);
+
+                drawTable(doc, myPage);
 
 //                cont.setTextTranslation(startX * 72, mediabox.getHeight() - (startY*72) );
 
@@ -132,6 +144,71 @@ public class PDFGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void drawTable(PDDocument doc, PDPage myPage) throws IOException {
+
+        float margin = 75;
+
+        //Dummy Table
+        // starting y position is whole page height subtracted by top and bottom margin
+        float yStartNewPage = myPage.getMediaBox().getHeight() - (2 * margin);
+        // we want table across whole page width (subtracted by left and right margin ofcourse)
+        float tableWidth = myPage.getMediaBox().getWidth() - (2 * margin);
+
+        boolean drawContent = true;
+        float yStart = yStartNewPage;
+        float bottomMargin = 70;
+        // y position is your coordinate of top left corner of the table
+        float yPosition = 550;
+
+        BaseTable table = new BaseTable(yPosition, yStartNewPage, bottomMargin, tableWidth, margin, doc, myPage, true, drawContent);
+
+        float defaultRowHeight = 28f;
+
+
+        Row<PDPage> headerRow = table.createRow(defaultRowHeight);
+        Cell<PDPage> cell = headerRow.createCell(50, "<b>Facility ID :</b>");
+        cell =  headerRow.createCell(50, "20932");
+        table.addHeaderRow(headerRow);
+
+
+        Row<PDPage> row = table.createRow(defaultRowHeight);
+        cell = row.createCell(50, "<b>Name of SME :</b> IMPEX MARINE (S) PTE LTD");
+        cell = row.createCell(50, "<b>UEN</b>: 1900089G ");
+
+        HashMap<Integer, String> productMap = new HashMap<>();
+        productMap.put(1, "Invoice Finacing AR(Disclosed)");
+        productMap.put(2, "Invoice Finacing AR(No Disclosed)");
+        productMap.put(3, "Purchase Order Financing");
+        productMap.put(4, "Working Capital Financing");
+
+        Row<PDPage> productTypeRow = table.createRow(50);
+        StringBuilder str = new StringBuilder();
+        str.append("<b>Type of Facility Application:</b><br>");
+        for (Map.Entry<Integer, String > entry : productMap.entrySet()){
+            str.append(entry.getValue());
+            str.append("<br><br>");
+        }
+        cell =  productTypeRow.createCell(100, str.toString());
+
+        HashMap<String, String> tableRawData = new HashMap<>();
+        tableRawData.put("<b>Funded Amount:</b>", "S$ 80,000.00");
+        tableRawData.put("<b>Tenure Offered:</b>", "3 (Months)");
+        tableRawData.put("<b>Tenure of Facility:</b>", "The Facility shall be repaid by us in accordance with the Schedule annexed.");
+        tableRawData.put("<b>Interest Rate (per month):</b>", "2.50%, calculated per day basis");
+        tableRawData.put("<b>Interest Structure*: </b>", "Declining Balance");
+        tableRawData.put("<b>Late Payment Fee: </b>", "1.00% of outstanding installment due");
+        tableRawData.put("<b>Funding Fee:: </b>", "3.2100% of the Funded Amount (Inclusive of GST)");
+        for (Map.Entry<String, String > entry : tableRawData.entrySet()){
+            Row<PDPage> rowEntry = table.createRow(defaultRowHeight);
+            cell = rowEntry.createCell(50, entry.getKey());
+            cell = rowEntry.createCell(50, entry.getValue());
+        }
+
+
+        table.draw();
     }
 
     private void parseIndividualLines(StringBuffer wholeLetter, List<String> lines, float fontSize, PDFont pdfFont, float width) throws IOException {
