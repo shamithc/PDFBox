@@ -29,6 +29,7 @@ public class PDFGenerator {
             float startY = mediabox.getUpperRightY() - margin;
             float yOffset = startY;
             PDType1Font font = PDType1Font.TIMES_ROMAN;
+            PDType1Font fontBold = PDType1Font.TIMES_BOLD;
 
 
             try (PDPageContentStream cont = new PDPageContentStream(doc, myPage)) {
@@ -55,17 +56,15 @@ public class PDFGenerator {
                 String text = "Terms defined and the rules of interpretation in the SMEs’ Terms and Conditions and the Working Capital Financing Facility Terms and Conditions " +
                         "have the same meaning and effect in this Facility Request unless a different meaning is ascribed to it here.";
 
-
-
-                        List<String> lines = new ArrayList<>();
+                List<String> lines = new ArrayList<>();
 
 //                parseIndividualLines(pageText, lines, fontSize, PDType1Font.TIMES_ROMAN, width);
 
                 cont.beginText();
-                cont.setFont(font, 14);
+                cont.setFont(fontBold, 15.0f);
                 cont.newLineAtOffset(startX, yOffset);
                 yOffset-=leading;
-                cont.showText("Facility Request");
+                cont.showText("FACILITY REQUEST");
                 cont.newLineAtOffset(0, -leading);
                 yOffset-=leading;
 

@@ -14,7 +14,7 @@ import java.util.List;
 public class Paragraph {
 
 //    private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
-    private static final float FONT_SIZE = 12;
+    private static final float FONT_SIZE = 8;
     private static final float LEADING = -1.5f * FONT_SIZE;
 
     public void generate(){
