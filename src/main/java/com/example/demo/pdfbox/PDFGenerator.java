@@ -3,6 +3,7 @@ package com.example.demo.pdfbox;
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
+import be.quodlibet.boxable.VerticalAlignment;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -89,50 +90,11 @@ public class PDFGenerator {
                         "our Account.";
 
                 paragraph.addParagraph(cont, width, 0, -12, text, true, font);
-
-                drawTable(doc, myPage);
-
-//                cont.setTextTranslation(startX * 72, mediabox.getHeight() - (startY*72) );
-
-
-
-//                for (String line:lines) {
-//                    cont.showText(line);
-////                    cont.drawString(line);
-//                    cont.newLineAtOffset(0, -leading);
-//                    yOffset-=leading;
-//                }
-
-
-
-
-//                cont.newLineAtOffset(35, 450);
-
+                drawPageOneTable(doc, myPage);
                 cont.setFont(PDType1Font.TIMES_ROMAN, fontSize);
                 cont.newLineAtOffset(startX, startY);
                 yOffset -= leading;
                 cont.setLeading(14.5f);
-
-//                cont.newLineAtOffset(25, 700);
-//                String line1 = "World War II (often abbreviated to WWII or WW2), "
-//                        + "also known as the Second World War,";
-//                cont.showText(line1);
-//
-//                cont.newLine();
-//
-//                String line2 = "was a global war that lasted from 1939 to 1945, "
-//                        + "although related conflicts began earlier.";
-//                cont.showText(line2);
-//                cont.newLine();
-//
-//                String line3 = "It involved the vast majority of the world's "
-//                        + "countries—including all of the great powers—";
-//                cont.showText(line3);
-//                cont.newLine();
-//
-//                String line4 = "eventually forming two opposing military "
-//                        + "alliances: the Allies and the Axis.";
-//                cont.showText(line4);
                 cont.newLine();
 
                     cont.endText();
@@ -147,10 +109,9 @@ public class PDFGenerator {
     }
 
 
-    private void drawTable(PDDocument doc, PDPage myPage) throws IOException {
+    private void drawPageOneTable(PDDocument doc, PDPage myPage) throws IOException {
 
         float margin = 75;
-
         //Dummy Table
         // starting y position is whole page height subtracted by top and bottom margin
         float yStartNewPage = myPage.getMediaBox().getHeight() - (2 * margin);
@@ -170,7 +131,10 @@ public class PDFGenerator {
 
         Row<PDPage> headerRow = table.createRow(defaultRowHeight);
         Cell<PDPage> cell = headerRow.createCell(50, "<b>Facility ID :</b>");
-        cell =  headerRow.createCell(50, "20932");
+//        cell.setBorderStyle(null);
+        cell.setValign(VerticalAlignment.MIDDLE);
+        cell =  headerRow.createCell(50, "<b>20932</b>");
+        cell.setValign(VerticalAlignment.MIDDLE);
         table.addHeaderRow(headerRow);
 
 
@@ -206,9 +170,20 @@ public class PDFGenerator {
             cell = rowEntry.createCell(50, entry.getKey());
             cell = rowEntry.createCell(50, entry.getValue());
         }
-
-
+        
         table.draw();
+
+        //TODO - find position dynamically
+        yPosition = 200;
+
+        BaseTable guaranteeTable = new BaseTable(yPosition, yStartNewPage, bottomMargin, tableWidth, margin, doc, myPage, true, drawContent);
+        Row<PDPage>  guaranteeRow = guaranteeTable.createRow(35);
+        StringBuilder guaranteeTextBuilder = new StringBuilder();
+        guaranteeTextBuilder.append("<b>Guarantee</b><br><br>");
+        guaranteeTextBuilder.append("A joint and several Personal Guarantee granted by each of our directors in favour of Validus Capital Pte. Ltd. as agent for certain Investors (<b>Validus</b>).");
+        Cell<PDPage> guaranteeRowCell = guaranteeRow.createCell(100, guaranteeTextBuilder.toString());
+        guaranteeTable.draw();
+
     }
 
     private void parseIndividualLines(StringBuffer wholeLetter, List<String> lines, float fontSize, PDFont pdfFont, float width) throws IOException {
