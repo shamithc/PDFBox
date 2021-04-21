@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.pdfbox.FRIGenerator;
 import com.example.demo.pdfbox.FRSGenerator;
 import com.example.demo.pdfbox.PDFGenerator;
 import com.example.demo.pdfbox.Paragraph;
@@ -17,9 +18,13 @@ public class HelloController {
 //        new PDFGenerator().generateV1();
 //        new Paragraph().generate();
         new FRSGenerator().generate();
-        return "Hello World!";
+        return "FRS Generated!";
     }
 
-
+    @GetMapping("/generate-fri")
+    public String generateFRI() throws IOException {
+        new FRIGenerator().generate();
+        return "FRI generated!";
+    }
 
 }
