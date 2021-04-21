@@ -1,9 +1,8 @@
 package com.example.demo.pdfbox;
 
-import be.quodlibet.boxable.BaseTable;
-import be.quodlibet.boxable.Cell;
-import be.quodlibet.boxable.Row;
-import be.quodlibet.boxable.VerticalAlignment;
+import be.quodlibet.boxable.*;
+import be.quodlibet.boxable.utils.PDStreamUtils;
+import be.quodlibet.boxable.utils.PageContentStreamOptimized;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -12,6 +11,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +25,7 @@ public class FRSGenerator {
         pageOne(doc);
         pageTwo(doc);
         pageThree(doc);
+        pageFour(doc);
         doc.save("src/main/resources/wwii-v1.pdf");
         doc.close();
     }
@@ -240,22 +241,22 @@ public class FRSGenerator {
 
         float scale = 1f;
         PDImageXObject pdImage = PDImageXObject.createFromFile("src/main/resources/static/validus-new.png", doc);
-        yOffset -= 40;
+        yOffset -= 2;
 
         cont.drawImage(pdImage, startX, startY, 200, 40);
         String text = "We further undertake to Validus";
         cont.beginText();
         cont.setFont(fontBold, 15.0f);
         cont.newLineAtOffset(startX, yOffset);
-        yOffset -= leading;
         cont.newLineAtOffset(0, -leading);
 
         Paragraph paragraph = new Paragraph();
-        paragraph.addParagraph(cont, width, 0, -12, text, true, font);
+        paragraph.addParagraph(cont, width, -10, -12, text, true, font);
+
 
         text = "1. to provide Validus a full set of our management accounts within six (6) weeks of the end of each calendar quarter unless otherwise notified"
                 + "by Validus";
-        paragraph.addParagraph(cont, width, 0, -0, text, true, font);
+        paragraph.addParagraph(cont, width, 10, -0, text, true, font);
 
         text = "2. not to transact, assign or create any Security over any assets of the SME without Validus’s prior written consent in our Facility Application and";
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
@@ -264,42 +265,135 @@ public class FRSGenerator {
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
 
         text = "Please make this disbursement to the following accounts:";
-        paragraph.addParagraph(cont, width, 0, -15, text, true, font);
+        paragraph.addParagraph(cont, width, -10, -15, text, true, font);
 
         text = "S$ 2,568.00to Validus’ account:";
-        paragraph.addParagraph(cont, width, 0, -0, text, true, font);
+        paragraph.addParagraph(cont, width, 15, -2, text, true, fontBold);
 
         text = "Account Name: Validus Capital Pte. Ltd";
+        paragraph.addParagraph(cont, width, 15, -0, text, true, font);
 
-        paragraph.addParagraph(cont, width, 0, -0, text, true, font);
         text = "Bank Name: DBS SingaporeBank ";
-
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
-        text = "Account No.: 003-953413-2";
 
+        text = "Account No.: 003-953413-2";
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
 
         text = "Swift code: DBSSSGSG";
-
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
+
         text = "DBS Bank Ltd, 12 Marina Boulevard, DBS Asia Central, Marina Bay Financial Centre Tower 3";
-
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
+
         text = " S$ 77,432.00to SME’s account:";
+        paragraph.addParagraph(cont, width, -15, -10, text, true, fontBold);
 
-        paragraph.addParagraph(cont, width, 0, -16, text, true, font);
         text = "Account Name: IMPEX MARINE (S) PTE LTD";
+        paragraph.addParagraph(cont, width, 15, -0, text, true, font);
 
-        paragraph.addParagraph(cont, width, 0, -0, text, true, font);
         text = "Bank Name: DBS";
-
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
+
         text = "Bank Account No.: 033-006161-7";
-
         paragraph.addParagraph(cont, width, 0, -0, text, true, font);
-        drawPageThreeTable(doc, myPage);
+
+
+        text = "In the presence of:";
+        paragraph.addParagraph(cont, width, 250, -170, text, true, font);
+
         cont.endText();
+        float signatureWidth = 150;
+        yOffset = 250;
+
+        drawLine(cont, startX, yOffset, startX + signatureWidth, 1);
+        drawLine(cont, startX + 250, yOffset, 250 + startX + signatureWidth, 1);
+
+        cont.beginText();
+        cont.setFont(fontBold, 15.0f);
+        cont.newLineAtOffset(startX, yOffset);
+
+        text = "Signature and Company Stamp";
+        paragraph.addParagraph(cont, width, 0, -10, text, true, fontBold);
+
+        text = "This document is generated on 27/10/2020 for Facility ID: 20932";
+        paragraph.addParagraph(cont, width, 250, 10, text, true, font);
+
+
+        text = "This document is generated on 27/10/2020 for Facility ID: 20932";
+        paragraph.addParagraph(cont, width, -250, -10, text, true, font);
+
+        text = "Name : ";
+        paragraph.addParagraph(cont, width, 250, 10, text, true, font);
+
+        text = "Name: ";
+        paragraph.addParagraph(cont, width, -250, -10, text, true, font);
+
+        text = "Identification number: ";
+        paragraph.addParagraph(cont, width, 250, 10, text, true, font);
+
+        text = "Designation:";
+        paragraph.addParagraph(cont, width, -250, -10, text, true, font);
+
+        text = "SME: IMPEX MARINE (S) PTE LTD";
+        paragraph.addParagraph(cont, width, 0, -10, text, true, font);
+
+        text = "Date: 27/10/2020";
+        paragraph.addParagraph(cont, width, 0, -10, text, true, font);
+
+        cont.endText();
+
+
         cont.close();
+    }
+
+    public void pageFour(PDDocument doc) throws IOException {
+        PDPage myPage = new PDPage();
+        doc.addPage(myPage);
+        PDRectangle mediabox = myPage.getMediaBox();
+        float fontSize = 12;
+        float leading = 1.5f * fontSize;
+        float margin = 75;
+        float width = mediabox.getWidth() - 2 * margin;
+        float startX = mediabox.getLowerLeftX() + margin;
+        float startY = mediabox.getUpperRightY() - margin;
+        float yOffset = startY;
+        PDType1Font font = PDType1Font.TIMES_ROMAN;
+        PDType1Font fontBold = PDType1Font.TIMES_BOLD;
+        PDPageContentStream cont = new PDPageContentStream(doc, myPage);
+
+        float scale = 1f;
+        PDImageXObject pdImage = PDImageXObject.createFromFile("src/main/resources/static/validus-new.png", doc);
+        yOffset -= 2;
+
+        cont.drawImage(pdImage, startX, startY, 200, 40);
+
+        String text = "SCHEDULE";
+        cont.beginText();
+        cont.setFont(fontBold, 15.0f);
+        cont.newLineAtOffset(startX, yOffset);
+        cont.newLineAtOffset(0, -leading);
+
+        Paragraph paragraph = new Paragraph();
+        paragraph.addParagraph(cont, width, 0, -12, text, true, font);
+
+        text = "Funding Date: 27/10/2020";
+        paragraph.addParagraph(cont, width, 0, -12, text, true, font);
+
+        cont.endText();
+
+        drawPageFourTable(doc, myPage);
+
+
+        cont.close();
+
+    }
+
+    private void drawLine(PDPageContentStream cont, float startX, float startY, float lineEndPoint, float lineWidth) throws IOException {
+        //begin to draw our line
+        cont.setLineWidth(lineWidth);
+        cont.moveTo(startX, startY + -2);
+        cont.lineTo(lineEndPoint, startY + -2);
+        cont.stroke();
     }
 
 
@@ -415,5 +509,48 @@ public class FRSGenerator {
         Cell<PDPage> guaranteeRowCell =
                 guaranteeRow.createCell(100, guaranteeTextBuilder.toString());
         guaranteeTable.draw();
+    }
+
+
+    private void drawPageFourTable(PDDocument doc, PDPage myPage) throws IOException {
+        float margin = 75;
+        float yStartNewPage = myPage.getMediaBox().getHeight() - (2 * margin);
+        float tableWidth = myPage.getMediaBox().getWidth() - (2 * margin);
+        boolean drawContent = true;
+        float bottomMargin = 70;
+        float yPosition = 650;
+        BaseTable table = new BaseTable(yPosition, yStartNewPage, bottomMargin, tableWidth, margin, doc, myPage, true, drawContent);
+
+        float defaultRowHeight = 28f;
+
+        Row<PDPage> headerRow = table.createRow(defaultRowHeight);
+        Cell<PDPage> cell = headerRow.createCell(50, "<b>Repayment Dates</b>");
+        //        cell.setBorderStyle(null);
+        cell.setValign(VerticalAlignment.MIDDLE);
+        cell.setAlign(HorizontalAlignment.CENTER);
+        cell = headerRow.createCell(50, "<b>Amount payable on corresponding repayment date</b>");
+        cell.setValign(VerticalAlignment.MIDDLE);
+        cell.setAlign(HorizontalAlignment.CENTER);
+        table.addHeaderRow(headerRow);
+
+        HashMap<String, String> tableRawData = new HashMap<>();
+        tableRawData.put("27/11/2020", "S$ 28,010.97");
+        tableRawData.put("28/11/2020", "S$ 28,010.97");
+        tableRawData.put("29/11/2020", "S$ 28,010.97");
+
+        for (Map.Entry<String, String> entry : tableRawData.entrySet()) {
+            Row<PDPage> row = table.createRow(defaultRowHeight);
+            cell =row.createCell(50, entry.getKey());
+            cell.setValign(VerticalAlignment.MIDDLE);
+            cell.setAlign(HorizontalAlignment.CENTER);
+            cell = row.createCell(50, entry.getValue());
+            cell.setValign(VerticalAlignment.MIDDLE);
+            cell.setAlign(HorizontalAlignment.CENTER);
+        }
+
+
+
+        table.draw();
+
     }
 }
