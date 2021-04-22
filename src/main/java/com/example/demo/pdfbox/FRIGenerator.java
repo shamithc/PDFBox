@@ -141,7 +141,7 @@ public class FRIGenerator {
     cell =
         rowEntry2.createCell(25, "<b>Repayment date</b>");
     cell =
-        rowEntry2.createCell(24, "<b>Repayment status</b>");
+        rowEntry2.createCell(22, "<b>Repayment status</b>");
     Row<PDPage> rowEntry3 = innertable1.createRow(innerDefaultRowHeight);
     cell = rowEntry3.createCell(25, "20102");
     cell =
@@ -149,7 +149,7 @@ public class FRIGenerator {
     cell =
         rowEntry3.createCell(25, "18/01/2021");
     cell =
-        rowEntry3.createCell(24, "Not yet Due");
+        rowEntry3.createCell(22, "Not yet Due");
     Row<PDPage> rowEntry4 = innertable1.createRow(innerDefaultRowHeight);
     cell = rowEntry4.createCell(25, "20285");
     cell =
@@ -157,7 +157,7 @@ public class FRIGenerator {
     cell =
         rowEntry4.createCell(25, "04/02/2021");
     cell =
-        rowEntry4.createCell(24, "Not yet Due");
+        rowEntry4.createCell(22, "Not yet Due");
     Row<PDPage> rowEntry5 = innertable1.createRow(innerDefaultRowHeight);
     cell = rowEntry5.createCell(25, "20351");
     cell =
@@ -165,7 +165,7 @@ public class FRIGenerator {
     cell =
         rowEntry5.createCell(25, "10/12/2020");
     cell =
-        rowEntry5.createCell(24, "Not yet Due");
+        rowEntry5.createCell(22, "Not yet Due");
     Row<PDPage> rowEntry6 = innertable1.createRow(innerDefaultRowHeight);
     cell = rowEntry6.createCell(25, "20352");
     cell =
@@ -173,7 +173,7 @@ public class FRIGenerator {
     cell =
         rowEntry6.createCell(25, "10/12/2020");
     cell =
-        rowEntry6.createCell(24, "Not yet Due");
+        rowEntry6.createCell(22, "Not yet Due");
     Row<PDPage> rowEntry7 = innertable1.createRow(innerDefaultRowHeight);
     cell = rowEntry7.createCell(25, "20374");
     cell =
@@ -181,7 +181,7 @@ public class FRIGenerator {
     cell =
         rowEntry7.createCell(25, "18/02/2021");
     cell =
-        rowEntry7.createCell(24, "Not yet Due");
+        rowEntry7.createCell(22, "Not yet Due");
     Row<PDPage> rowEntry8 = innertable1.createRow(innerDefaultRowHeight);
     cell = rowEntry8.createCell(25, "20553");
     cell =
@@ -189,7 +189,7 @@ public class FRIGenerator {
     cell =
         rowEntry8.createCell(25, "28/02/2021");
     cell =
-        rowEntry8.createCell(24, "Not yet Due");
+        rowEntry8.createCell(22, "Not yet Due");
     Row<PDPage> rowEntry9 = innertable1.createRow(innerDefaultRowHeight);
     cell = rowEntry9.createCell(25, "20679");
     cell =
@@ -197,7 +197,7 @@ public class FRIGenerator {
     cell =
         rowEntry9.createCell(25, "06/01/2021");
     cell =
-        rowEntry9.createCell(24, "Not yet Due");
+        rowEntry9.createCell(22, "Not yet Due");
     Row<PDPage> rowEntry10 = innertable1.createRow(30);
   cell = rowEntry10.createCell(100,
         "<b>Repayment Schedule</b>");
@@ -216,16 +216,17 @@ public class FRIGenerator {
 
   private void tenureTable(PDDocument doc, PDPage myPage) throws IOException {
 
-    float margin = 75;
-    float yStartNewPage = myPage.getMediaBox().getHeight() - (4 * margin);
-    float tableWidth = myPage.getMediaBox().getWidth() - (2 * margin);
-    boolean drawContent = true;
-    float yStart = yStartNewPage;
-    float bottomMargin = 70;
-    float yPosition = 380;
+    float margin1 = 75 + 5;
+    float yStartNewPage1= myPage.getMediaBox().getHeight() - (4 * margin1);
+    float tableWidth1 = myPage.getMediaBox().getWidth() - (2 * margin1) - 5;
+    boolean drawContent1 = true;
+    float yStart1 = yStartNewPage1;
+    float bottomMargin1 = 70;
+    float yPosition1 = 380;
+
     BaseTable table =
-        new BaseTable(yPosition, yStartNewPage, bottomMargin, tableWidth,
-            margin, doc, myPage, true, drawContent);
+        new BaseTable(yPosition1, yStartNewPage1, bottomMargin1, tableWidth1,
+            margin1, doc, myPage, true, drawContent1);
     float defaultRowHeight = 24f;
     Row<PDPage> headerRow = table.createRow(defaultRowHeight);
     Cell<PDPage>  cell = headerRow.createCell(16, "<b>Tenure</b>");
@@ -238,9 +239,9 @@ public class FRIGenerator {
     cell =
         headerRow.createCell(16, "<b>Net Interest to<br>Investor (SGD</b>");
     cell =
-        headerRow.createCell(16, "<b>Total<br>(SGD</b>");
+        headerRow.createCell(21, "<b>Total<br>(SGD</b>");
     Row<PDPage> row1 = table.createRow(defaultRowHeight);
-     cell = row1.createCell(16, "150<br>Days");
+    cell = row1.createCell(16, "150<br>Days");
     cell =
         row1.createCell(16, "76,600.0");
     cell =
@@ -250,13 +251,15 @@ public class FRIGenerator {
     cell =
         row1.createCell(16, "6,020.76");
     cell =
-        row1.createCell(16, "82,620.76");
+        row1.createCell(21, "82,620.76");
     Row<PDPage> row2 = table.createRow(defaultRowHeight);
     cell = row2.createCell(100,
         "<b>Important information on Validus Invoice Financing and this Facility Request</b>");
     cell.setValign(VerticalAlignment.MIDDLE);
     cell.setTextColor(Color.blue);
     cell.setBottomBorderStyle(null);
+    cell.setRightBorderStyle(null);
+    cell.setLeftBorderStyle(null);
     table.addHeaderRow(headerRow);
     table.draw();
   }
