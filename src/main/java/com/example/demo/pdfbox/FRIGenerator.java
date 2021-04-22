@@ -117,28 +117,146 @@ public class FRIGenerator {
             + "<b>First facility funded on 27/2/2020</b><br><br>"
             + "<b>SGD 349,300 funded and repaid over 10 facilities.</b><br><br>"
             + "<b>Open Facilities:</b>");
+
     cell.setTopBorderStyle(null);
     cell.setValign(VerticalAlignment.MIDDLE);
+    cell.setBottomPadding((float) 340);
 
-
+    float margin1 = 75 + 5;
+    float yStartNewPage1= myPage.getMediaBox().getHeight() - (4 * margin);
+    float tableWidth1 = myPage.getMediaBox().getWidth() - (2 * margin) - 5;
+    boolean drawContent1 = true;
+    float yStart1 = yStartNewPage;
+    float bottomMargin1 = 70;
+    float yPosition1 = 600;
 
     BaseTable innertable1 =
+        new BaseTable(yPosition1, yStartNewPage1, bottomMargin1, tableWidth1,
+            margin1, doc, myPage, true, drawContent1);
+    float innerDefaultRowHeight = 24f;
+    Row<PDPage> rowEntry2 = innertable1.createRow(innerDefaultRowHeight);
+    cell = rowEntry2.createCell(25, "<b>Fac. #</b>");
+    cell =
+        rowEntry2.createCell(25, "<b>Funded amount<br>(SGD)</b>");
+    cell =
+        rowEntry2.createCell(25, "<b>Repayment date</b>");
+    cell =
+        rowEntry2.createCell(24, "<b>Repayment status</b>");
+    Row<PDPage> rowEntry3 = innertable1.createRow(innerDefaultRowHeight);
+    cell = rowEntry3.createCell(25, "20102");
+    cell =
+        rowEntry3.createCell(25, "7,200.00");
+    cell =
+        rowEntry3.createCell(25, "18/01/2021");
+    cell =
+        rowEntry3.createCell(24, "Not yet Due");
+    Row<PDPage> rowEntry4 = innertable1.createRow(innerDefaultRowHeight);
+    cell = rowEntry4.createCell(25, "20285");
+    cell =
+        rowEntry4.createCell(25, "16,500.00");
+    cell =
+        rowEntry4.createCell(25, "04/02/2021");
+    cell =
+        rowEntry4.createCell(24, "Not yet Due");
+    Row<PDPage> rowEntry5 = innertable1.createRow(innerDefaultRowHeight);
+    cell = rowEntry5.createCell(25, "20351");
+    cell =
+        rowEntry5.createCell(25, "16,900.00");
+    cell =
+        rowEntry5.createCell(25, "10/12/2020");
+    cell =
+        rowEntry5.createCell(24, "Not yet Due");
+    Row<PDPage> rowEntry6 = innertable1.createRow(innerDefaultRowHeight);
+    cell = rowEntry6.createCell(25, "20352");
+    cell =
+        rowEntry6.createCell(25, "2,800.00");
+    cell =
+        rowEntry6.createCell(25, "10/12/2020");
+    cell =
+        rowEntry6.createCell(24, "Not yet Due");
+    Row<PDPage> rowEntry7 = innertable1.createRow(innerDefaultRowHeight);
+    cell = rowEntry7.createCell(25, "20374");
+    cell =
+        rowEntry7.createCell(25, "55,700.00");
+    cell =
+        rowEntry7.createCell(25, "18/02/2021");
+    cell =
+        rowEntry7.createCell(24, "Not yet Due");
+    Row<PDPage> rowEntry8 = innertable1.createRow(innerDefaultRowHeight);
+    cell = rowEntry8.createCell(25, "20553");
+    cell =
+        rowEntry8.createCell(25, "48,800.00");
+    cell =
+        rowEntry8.createCell(25, "28/02/2021");
+    cell =
+        rowEntry8.createCell(24, "Not yet Due");
+    Row<PDPage> rowEntry9 = innertable1.createRow(innerDefaultRowHeight);
+    cell = rowEntry9.createCell(25, "20679");
+    cell =
+        rowEntry9.createCell(25, "9,200.0");
+    cell =
+        rowEntry9.createCell(25, "06/01/2021");
+    cell =
+        rowEntry9.createCell(24, "Not yet Due");
+    Row<PDPage> rowEntry10 = innertable1.createRow(30);
+  cell = rowEntry10.createCell(100,
+        "<b>Repayment Schedule</b>");
+    cell.setBorderStyle(null);
+    cell.setAlign(HorizontalAlignment.LEFT);
+    innertable1.draw();
+    tenureTable(doc,myPage);
+    Row<PDPage> headerRow2 = table.createRow(defaultRowHeight);
+    cell = headerRow2.createCell(100,
+        "<b>This Facility Request is governed by Singapore laws.</b>");
+    cell.setValign(VerticalAlignment.MIDDLE);
+    table.addHeaderRow(headerRow);
+    table.draw();
+  }
+
+
+  private void tenureTable(PDDocument doc, PDPage myPage) throws IOException {
+
+    float margin = 75;
+    float yStartNewPage = myPage.getMediaBox().getHeight() - (4 * margin);
+    float tableWidth = myPage.getMediaBox().getWidth() - (2 * margin);
+    boolean drawContent = true;
+    float yStart = yStartNewPage;
+    float bottomMargin = 70;
+    float yPosition = 380;
+    BaseTable table =
         new BaseTable(yPosition, yStartNewPage, bottomMargin, tableWidth,
             margin, doc, myPage, true, drawContent);
-    float innerDefaultRowHeight = 24f;
-    Row<PDPage> innerHeaderRow = innertable1.createRow(innerDefaultRowHeight);
-    Row<PDPage> rowEntry2 = innertable1.createRow(defaultRowHeight);
-    cell = rowEntry2.createCell(25, "<b>Revenue</b>");
+    float defaultRowHeight = 24f;
+    Row<PDPage> headerRow = table.createRow(defaultRowHeight);
+    Cell<PDPage>  cell = headerRow.createCell(16, "<b>Tenure</b>");
     cell =
-        rowEntry2.createCell(25, "$3,384,885.00");
+        headerRow.createCell(16, "<b>Principal<br>(SGD</b>");
     cell =
-        rowEntry2.createCell(25, "$762,829.00");
+        headerRow.createCell(16, "<b>Interest -<br>Total (SGD)</b>");
     cell =
-        rowEntry2.createCell(25, "$363,362.00");
-
-    //if.addHeaderRow(innerHeaderRow);
-    innertable1.draw();
-
+        headerRow.createCell(16, "<b>Validus commission<br>(Inclusive of GST)(SGD</b>");
+    cell =
+        headerRow.createCell(16, "<b>Net Interest to<br>Investor (SGD</b>");
+    cell =
+        headerRow.createCell(16, "<b>Total<br>(SGD</b>");
+    Row<PDPage> row1 = table.createRow(defaultRowHeight);
+     cell = row1.createCell(16, "150<br>Days");
+    cell =
+        row1.createCell(16, "76,600.0");
+    cell =
+        row1.createCell(16, "7,660.00");
+    cell =
+        row1.createCell(16, "1,639.24");
+    cell =
+        row1.createCell(16, "6,020.76");
+    cell =
+        row1.createCell(16, "82,620.76");
+    Row<PDPage> row2 = table.createRow(defaultRowHeight);
+    cell = row2.createCell(100,
+        "<b>Important information on Validus Invoice Financing and this Facility Request</b>");
+    cell.setValign(VerticalAlignment.MIDDLE);
+    cell.setTextColor(Color.blue);
+    cell.setBottomBorderStyle(null);
     table.addHeaderRow(headerRow);
     table.draw();
   }
