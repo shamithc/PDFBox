@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.pdfbox.FRIGenerator;
 import com.example.demo.pdfbox.FRSGenerator;
 import com.example.demo.pdfbox.FRSPDFVariables;
 import com.example.demo.pdfbox.PDFGenerator;
@@ -20,8 +21,15 @@ public class HelloController {
 //        new PDFGenerator().generateV1();
 //        new Paragraph().generate();
         new FRSGenerator().generate(generateAndUploadFRSDocument());
-        return "Hello World!";
+        return "FRS Generated!";
     }
+
+    @GetMapping("/generate-fri")
+    public String generateFRI() throws IOException {
+        new FRIGenerator().generate();
+        return "FRI generated!";
+    }
+
 
 
     private HashMap<String, Object> generateAndUploadFRSDocument(){
@@ -73,7 +81,5 @@ public class HelloController {
 
         return frsPayload;
     }
-
-
 
 }
