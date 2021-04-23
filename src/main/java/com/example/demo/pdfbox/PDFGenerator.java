@@ -4,11 +4,16 @@ import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
 import be.quodlibet.boxable.VerticalAlignment;
+
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import be.quodlibet.boxable.utils.PDStreamUtils;
+import be.quodlibet.boxable.utils.PageContentStreamOptimized;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -303,6 +308,15 @@ public class PDFGenerator {
     paragraph.addParagraph(cont, width, 0, -0, text, true, font);
     drawPageThreeTable(doc, myPage);
     cont.endText();
+
+//    cont.moveTo(startX, 150);
+//    cont.lineTo(startX, 150);
+//    cont.stroke();
+
+    PageContentStreamOptimized cos = new PageContentStreamOptimized(cont);
+    PDStreamUtils.rect(cos, 0, myPage.getMediaBox().getHeight() / 2, myPage.getMediaBox().getWidth(), 11, Color.BLACK);
+
+
     cont.close();
   }
 
