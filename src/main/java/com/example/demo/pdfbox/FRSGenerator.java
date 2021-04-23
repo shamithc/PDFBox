@@ -1,37 +1,31 @@
 package com.example.demo.pdfbox;
 
 import be.quodlibet.boxable.*;
-import be.quodlibet.boxable.utils.PDStreamUtils;
-import be.quodlibet.boxable.utils.PageContentStreamOptimized;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class FRSGenerator {
 
-    public void generate() throws IOException {
+    public void generate(HashMap<String, Object> frsPayload) throws IOException {
         PDDocument doc = new PDDocument();
-        pageOne(doc);
-        pageTwo(doc);
-        pageThree(doc);
-        pageFour(doc);
+        pageOne(doc, frsPayload);
+        pageTwo(doc, frsPayload);
+        pageThree(doc, frsPayload);
+        pageFour(doc, frsPayload);
         doc.save("src/main/resources/wwii-v1.pdf");
         doc.close();
     }
 
 
-    public void pageOne(PDDocument doc) throws IOException {
+    public void pageOne(PDDocument doc, HashMap<String, Object> frsPayload) throws IOException {
         PDPage myPage = new PDPage();
         doc.addPage(myPage);
         PDRectangle mediabox = myPage.getMediaBox();
@@ -71,7 +65,7 @@ public class FRSGenerator {
                 "to apply to us in our dealings through the Platform and " +
                 "our Account.";
         paragraph.addParagraph(cont, width, 0, -12, text, true, font);
-        drawPageOneTable(doc, myPage);
+        drawPageOneTable(doc, myPage, frsPayload);
         cont.setFont(PDType1Font.TIMES_ROMAN, fontSize);
         cont.newLineAtOffset(startX, startY);
         yOffset -= leading;
@@ -82,7 +76,7 @@ public class FRSGenerator {
     }
 
 
-    public void pageTwo(PDDocument doc) throws IOException {
+    public void pageTwo(PDDocument doc, HashMap<String, Object> frsPayload) throws IOException {
         PDPage myPage = new PDPage();
         doc.addPage(myPage);
         PDRectangle mediabox = myPage.getMediaBox();
@@ -224,7 +218,7 @@ public class FRSGenerator {
         cont.close();
     }
 
-    public void pageThree(PDDocument doc) throws IOException {
+    public void pageThree(PDDocument doc, HashMap<String, Object> frsPayload) throws IOException {
         PDPage myPage = new PDPage();
         doc.addPage(myPage);
         PDRectangle mediabox = myPage.getMediaBox();
@@ -334,10 +328,10 @@ public class FRSGenerator {
         text = "Designation:";
         paragraph.addParagraph(cont, width, -250, -10, text, true, font);
 
-        text = "SME: IMPEX MARINE (S) PTE LTD";
+        text = (String) frsPayload.get(FRSPDFVariables.SME_NAME);
         paragraph.addParagraph(cont, width, 0, -10, text, true, font);
 
-        text = "Date: 27/10/2020";
+        text = String.format("Date: %s", frsPayload.get(FRSPDFVariables.GENERATED_DATE));
         paragraph.addParagraph(cont, width, 0, -10, text, true, font);
 
         cont.endText();
@@ -346,7 +340,7 @@ public class FRSGenerator {
         cont.close();
     }
 
-    public void pageFour(PDDocument doc) throws IOException {
+    public void pageFour(PDDocument doc, HashMap<String, Object> frsPayload) throws IOException {
         PDPage myPage = new PDPage();
         doc.addPage(myPage);
         PDRectangle mediabox = myPage.getMediaBox();
@@ -376,12 +370,12 @@ public class FRSGenerator {
         Paragraph paragraph = new Paragraph();
         paragraph.addParagraph(cont, width, 0, -12, text, true, font);
 
-        text = "Funding Date: 27/10/2020";
+        text =  text = String.format("Funding Date: %s", frsPayload.get(FRSPDFVariables.GENERATED_DATE));
         paragraph.addParagraph(cont, width, 0, -12, text, true, font);
 
         cont.endText();
 
-        drawPageFourTable(doc, myPage);
+        drawPageFourTable(doc, myPage, frsPayload);
 
 
         cont.close();
@@ -427,7 +421,7 @@ public class FRSGenerator {
         cell = row.createCell(50, "<b>UEN</b>: 1900089G ");
     }
 
-    private void drawPageOneTable(PDDocument doc, PDPage myPage) throws IOException {
+    private void drawPageOneTable(PDDocument doc, PDPage myPage, HashMap<String, Object> frsPayload) throws IOException {
 
         float margin = 75;
         //Dummy Table
@@ -452,41 +446,33 @@ public class FRSGenerator {
         Cell<PDPage> cell = headerRow.createCell(50, "<b>Facility ID :</b>");
         //        cell.setBorderStyle(null);
         cell.setValign(VerticalAlignment.MIDDLE);
-        cell = headerRow.createCell(50, "<b>20932</b>");
+        cell = headerRow.createCell(50, String.format("<b>%s</b>", frsPayload.get(FRSPDFVariables.FACILITY_ID)));
         cell.setValign(VerticalAlignment.MIDDLE);
         table.addHeaderRow(headerRow);
 
         Row<PDPage> row = table.createRow(defaultRowHeight);
-        cell = row.createCell(50, "<b>Name of SME :</b> IMPEX MARINE (S) PTE LTD");
-        cell = row.createCell(50, "<b>UEN</b>: 1900089G ");
+        cell = row.createCell(50, String.format("<b>Name of SME :</b> %s", frsPayload.get(FRSPDFVariables.SME_NAME)));
+        cell = row.createCell(50, String.format("<b>UEN</b>: %s ", frsPayload.get("uen")));
 
-        HashMap<Integer, String> productMap = new HashMap<>();
-        productMap.put(1, "Invoice Finacing AR(Disclosed)");
-        productMap.put(2, "Invoice Finacing AR(No Disclosed)");
-        productMap.put(3, "Purchase Order Financing");
-        productMap.put(4, "Working Capital Financing");
+        HashMap<Integer, String> facilityType = (HashMap<Integer, String>) frsPayload.get(FRSPDFVariables.FACILITY_TYPE);
 
         Row<PDPage> productTypeRow = table.createRow(50);
         StringBuilder str = new StringBuilder();
         str.append("<b>Type of Facility Application:</b><br><br>");
-        for (Map.Entry<Integer, String> entry : productMap.entrySet()) {
+        for (Map.Entry<Integer, String> entry : facilityType.entrySet()) {
             str.append(entry.getValue());
             str.append("<br><br>");
         }
         cell = productTypeRow.createCell(100, str.toString());
 
         HashMap<String, String> tableRawData = new HashMap<>();
-        tableRawData.put("<b>Funded Amount:</b>", "S$ 80,000.00");
-        tableRawData.put("<b>Tenure Offered:</b>", "3 (Months)");
-        tableRawData.put("<b>Tenure of Facility:</b>",
-                "The Facility shall be repaid by us in accordance with the Schedule annexed.");
-        tableRawData.put("<b>Interest Rate (per month):</b>",
-                "2.50%, calculated per day basis");
-        tableRawData.put("<b>Interest Structure*: </b>", "Declining Balance");
-        tableRawData.put("<b>Late Payment Fee: </b>",
-                "1.00% of outstanding installment due");
-        tableRawData.put("<b>Funding Fee:: </b>",
-                "3.2100% of the Funded Amount (Inclusive of GST)");
+        tableRawData.put(  "<b>Funded Amount:</b>", (String) frsPayload.get(FRSPDFVariables.FUNDED_AMT));
+        tableRawData.put("<b>Tenure Offered:</b>", (String) frsPayload.get(FRSPDFVariables.TENURE_OFFERED));
+        tableRawData.put("<b>Tenure of Facility:</b>", "The Facility shall be repaid by us in accordance with the Schedule annexed.");
+        tableRawData.put("<b>Interest Rate (per month):</b>", (String) frsPayload.get(FRSPDFVariables.INTEREST_RATE));
+        tableRawData.put("<b>Interest Structure*: </b>", (String) frsPayload.get(FRSPDFVariables.INTEREST_STRUCTURE));
+        tableRawData.put("<b>Late Payment Fee: </b>", (String) frsPayload.get(FRSPDFVariables.LATE_PAYMENT_FEES));
+        tableRawData.put("<b>Funding Fee:: </b>", (String) frsPayload.get(FRSPDFVariables.FUNDING_FEE));
         for (Map.Entry<String, String> entry : tableRawData.entrySet()) {
             Row<PDPage> rowEntry = table.createRow(defaultRowHeight);
             cell = rowEntry.createCell(50, entry.getKey());
@@ -512,7 +498,7 @@ public class FRSGenerator {
     }
 
 
-    private void drawPageFourTable(PDDocument doc, PDPage myPage) throws IOException {
+    private void drawPageFourTable(PDDocument doc, PDPage myPage, HashMap<String, Object> frsPayload) throws IOException {
         float margin = 75;
         float yStartNewPage = myPage.getMediaBox().getHeight() - (2 * margin);
         float tableWidth = myPage.getMediaBox().getWidth() - (2 * margin);
@@ -533,19 +519,33 @@ public class FRSGenerator {
         cell.setAlign(HorizontalAlignment.CENTER);
         table.addHeaderRow(headerRow);
 
-        HashMap<String, String> tableRawData = new HashMap<>();
-        tableRawData.put("27/11/2020", "S$ 28,010.97");
-        tableRawData.put("28/11/2020", "S$ 28,010.97");
-        tableRawData.put("29/11/2020", "S$ 28,010.97");
+//        HashMap<String, String> tableRawData = new HashMap<>();
+//        tableRawData.put("27/11/2020", "S$ 28,010.97");
+//        tableRawData.put("28/11/2020", "S$ 28,010.97");
+//        tableRawData.put("29/11/2020", "S$ 28,010.97");
 
-        for (Map.Entry<String, String> entry : tableRawData.entrySet()) {
+
+        HashMap<Integer, Object> repaymentSchedule = (HashMap<Integer, Object>) frsPayload.get(FRSPDFVariables.REPAYMENT_SCHEDULE);
+
+
+        for (Map.Entry<Integer, Object> entry : repaymentSchedule.entrySet()) {
+            String[] repaymentValues = (String[]) entry.getValue();
             Row<PDPage> row = table.createRow(defaultRowHeight);
-            cell =row.createCell(50, entry.getKey());
-            cell.setValign(VerticalAlignment.MIDDLE);
-            cell.setAlign(HorizontalAlignment.CENTER);
-            cell = row.createCell(50, entry.getValue());
-            cell.setValign(VerticalAlignment.MIDDLE);
-            cell.setAlign(HorizontalAlignment.CENTER);
+
+            for(int i = 0; i < repaymentValues.length; i++){
+                cell =row.createCell(50, repaymentValues[i]);
+                cell.setValign(VerticalAlignment.MIDDLE);
+                cell.setAlign(HorizontalAlignment.CENTER);
+            }
+
+
+//            Row<PDPage> row = table.createRow(defaultRowHeight);
+//            cell =row.createCell(50, entry.getKey());
+//            cell.setValign(VerticalAlignment.MIDDLE);
+//            cell.setAlign(HorizontalAlignment.CENTER);
+//            cell = row.createCell(50, entry.getValue());
+//            cell.setValign(VerticalAlignment.MIDDLE);
+//            cell.setAlign(HorizontalAlignment.CENTER);
         }
 
 
